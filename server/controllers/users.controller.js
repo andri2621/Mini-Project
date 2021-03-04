@@ -67,7 +67,7 @@ const signin = async (req, res) => {
 
     // idem : select * from users where user_email = :user_email
     const datauser = await req.context.models.users.findOne({
-      where: { user_email: user_email }, include: [{model: req.context.models.account}]
+      where: { user_email: user_email }, include: [{ model: req.context.models.account }]
     });
     // console.log(datauser)
 
@@ -89,9 +89,6 @@ const signin = async (req, res) => {
       })
     }
 
-
-
-
     //4. generate token jwt, jangan lupa tambahkan jwtSecret value di file config.js
     const token = jwt.sign({
       _id: datauser.user_id,
@@ -100,7 +97,7 @@ const signin = async (req, res) => {
 
     }, config.jwtSecret)
 
-    
+
 
     //5. set expire cookie
     res.cookie("t", token, {
@@ -118,28 +115,32 @@ const signin = async (req, res) => {
 
     //6. exclude value user_password & user_salt, agar tidak tampil di front-end
     // lalu send dengan include token, it's done
-    const {account} = datauser.dataValues;
-    if (account == undefined){
+    const { account } = datauser.dataValues;
+    if (account == undefined) {
       return res.
-      // status().send(401)
-      json({token,users: {
-        user_id : datauser.dataValues.user_id,
-        user_name : datauser.dataValues.user_name,
-        user_email:datauser.dataValues.user_email,
-        accounts : null
+        // status().send(401)
+        json({
+          token, users: {
+            user_id: datauser.dataValues.user_id,
+            user_name: datauser.dataValues.user_name,
+            user_email: datauser.dataValues.user_email,
+            accounts: null
 
-      }});
+          }
+        });
     }
     else {
-      return res.json({token,users: {
-        user_id : datauser.dataValues.user_id,
-        user_name : datauser.dataValues.user_name,
-        user_email:datauser.dataValues.user_email,
-        accounts : account.dataValues
-      
-        
-        
-      }});
+      return res.json({
+        token, users: {
+          user_id: datauser.dataValues.user_id,
+          user_name: datauser.dataValues.user_name,
+          user_email: datauser.dataValues.user_email,
+          accounts: account.dataValues
+
+
+
+        }
+      });
     }
 
 
@@ -151,14 +152,11 @@ const signin = async (req, res) => {
       data: users
 
     });
-    
+
   }
-  
+
 
 }
-
-
-
 
 
 
@@ -192,7 +190,6 @@ const requireSignin = expressJwt({
 })
 
 
-
 //ubah data
 // Change everyone without a last name to "Doe"
 const editusersMethod = async (req, res) => {
@@ -218,8 +215,40 @@ const deleteusersMethod = async (req, res) => {
 };
 
 
+//ubah data
 
 
+const ubahPassword = async (req, res) => {
+  const { user_email, user_password , newpassword } = req.body
+  console.log('password', user_password)
+
+  const users = await req.context.models.users.findOne({ where: { user_email: user_email } })
+  if (!AuthHelper.authenticate(user_password, users.dataValues.user_password, users.dataValues.user_salt)) {
+    return res.status('401').json({
+      status: false,
+      message: "Password salah"
+    })
+  }
+  
+  
+  const salt = AuthHelper.makeSalt();
+  const hashPassword = AuthHelper.hashPassword(newpassword, salt);
+
+
+  const dataUsers = await req.context.models.users.update({
+    user_password: hashPassword,
+    user_salt: salt 
+  }, {
+    where: { user_email: user_email } 
+    });
+
+  return res.status('201').json({
+    message: "berhasil diubah",
+    data: dataUsers
+  })
+
+
+}
 
 
 
@@ -234,5 +263,6 @@ export default {
   signup,
   signin,
   requireSignin,
+  ubahPassword,
   signout
 }

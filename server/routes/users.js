@@ -26,6 +26,9 @@ router.post('/signout/', indexCtrl.users.signout);
 
 router.get('/all/', indexCtrl.users.readAllUser);
 
+router.post('/ubahpassword/',indexCtrl.users.ubahPassword);
+
+
 
 
 
