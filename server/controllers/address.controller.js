@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { sequelize, Op } from '../models/index';
+import { sequelize, Op } from '../models/IndexModel';
 
 
 
@@ -11,6 +11,7 @@ const readAddressMethod = async (req, res) => {
     //       model: req.context.models.address
     //   }]
     // }
+
   );
     return res.send(address); 
 }
@@ -86,6 +87,17 @@ const deleteAddressMethod = async (req, res) => {
   };
 
 
+  // ======ambil address
+  const AddressRest = async (req, res) => {
+    const fullAddress = await sequelize.query(
+      // 'select p.prov_name, c.city_name,k.kec_name,o.kodepos from province p join city c on p.prov_id = c.city_prov_id join kecamatan k on c.city_id = k.kec_city_id join kodepos o on k.kec_id = o.kodepos_kec_id where kodepos= :acco_id group by city_id, prov_name,kec_name,kodepos'
+      'select p.prov_name, c.city_name,k.kec_name,o.kodepos, a.addr_address, t.acco_nama, t.acco_phone  from province p join city c on p.prov_id = c.city_prov_id join kecamatan k on c.city_id = k.kec_city_id join kodepos o on k.kec_id = o.kodepos_kec_id join address a on o.kodepos = a.addr_kodepos join account t on a.addr_accu_id = t.acco_id where t.acco_id= :acco_id group by city_id, prov_name,kec_name,kodepos,addr_id,acco_id'
+      ,
+      { replacements: { acco_id: req.params.id }, type: sequelize.QueryTypes.SELECT }
+    );
+    return res.send(fullAddress);
+  };
+
 
 // Gunakan export default agar semua function bisa dipakai di file lain.
 export default{
@@ -93,5 +105,6 @@ export default{
     findAddressMethod,
     addAddressMethod,
     deleteAddressMethod,
-    editAddressMethod
+    editAddressMethod,
+    AddressRest
 }

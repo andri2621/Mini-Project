@@ -1,5 +1,7 @@
 import {Router} from 'express';
 import provinceCtrl from '../controllers/province.controller'
+import indexCtrl from '../controllers/IndexController'
+
 
 const router = Router();
 

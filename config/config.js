@@ -4,7 +4,10 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || "YOUR_secret_key",
   db_name : "mpcomm",
   db_username : "postgres",
-  db_password: "admin"
+  db_password: "admin",
+  CLOUDINARY_CLOUD_NAME : 'codeid',
+  CLOUDINARY_API_KEY : '353246269428416',
+  CLOUDINARY_API_SECRET: 'XKAOQ-zFiXM4bNv-aNcO7nTmHAE',
 }
 
 export default config
