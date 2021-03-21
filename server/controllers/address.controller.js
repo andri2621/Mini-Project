@@ -77,6 +77,20 @@ const editAddressMethod = async (req, res) => {
         return res.sendStatus(200);
   };
 
+  const editPrimary = async (req, res) => {
+    const { 
+            addr_is_primary,
+            addr_accu_id} = req.body;
+    const address =  await req.context.models.address.update({    
+            
+            addr_is_primary : addr_is_primary,
+            addr_accu_id : addr_accu_id
+     }, {
+        where: { addr_id : req.params.addressId }
+          });
+        return res.sendStatus(200);
+  };
+
 //hapus data
 const deleteAddressMethod = async (req, res) => {
     const result = await req.context.models.address.destroy({
@@ -106,5 +120,6 @@ export default{
     addAddressMethod,
     deleteAddressMethod,
     editAddressMethod,
-    AddressRest
+    AddressRest,
+    editPrimary
 }

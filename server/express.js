@@ -27,6 +27,12 @@ app.use(compress())
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 
+var corsOptions = {
+  origin: "http://localhost:3000"
+};
+
+app.use(cors(corsOptions));
+
 // #middleware
 app.use(async (req, res, next) => {
   req.context = {models};
@@ -49,6 +55,9 @@ app.use('/api/kodepos',routes.kodepos)
 app.use('/api/address',routes.address)
 app.use('/api/users',routes.users)
 app.use('/api/account',routes.account)
+
+app.use('/api/images',routes.upload)
+
 
 
 

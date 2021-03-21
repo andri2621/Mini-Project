@@ -14,6 +14,9 @@ import address from './address';
 import users from './users';
 import account from './account';
 
+import upload from './uploadRoute';
+
+
 
 
 
@@ -28,5 +31,7 @@ export default {
   kodepos,
   address,
   users,
-  account
+  account,
+
+  upload
 };

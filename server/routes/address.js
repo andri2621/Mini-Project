@@ -11,5 +11,8 @@ router.delete('/:addressId',addressCtrl.deleteAddressMethod);
 
 router.get('/search/:id',addressCtrl.AddressRest);
 
+router.put('/primary/:addressId',addressCtrl.editPrimary);
+
+
 export default router;
 
